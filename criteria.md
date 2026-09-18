@@ -23,8 +23,7 @@ For at least 4 of my 5 test questions, the retrieved chunks include one that
 contains the answer.
 
 **Why this target:**
-<!-- e.g. "One of my questions is about a topic only two documents mention, so
-     I expect that one to be hard." -->
+I set the target to 4 out of 5 becuase four of the questions can be answered with retrieval. However, the fifth question requires retriving information from all classes in campus_life to calculate how many classes curve. 
 
 ---
 
@@ -33,8 +32,7 @@ contains the answer.
 Every answer the system produces names at least one source document.
 
 **Why this target:**
-<!-- Why all five and not four? What about your setup makes that achievable —
-     or what would have to go wrong for it not to be? -->
+In a Retrieval-Augumented Geneartion system, the answers or data will be retrieved from the available documents instead of generating fake answers. Ensuring the system name a source document allows the users and developer to know that the answer is in fact retrieved instead of created.
 
 ---
 
@@ -50,46 +48,28 @@ in at least 4 of 5 tries.
      just keep five of them, or the "4 of 5" above has nothing to be 4 of. -->
 
 **Why this target:**
-<!-- What did your distances look like when you set the cutoff in Milestone 4?
-     Was there a clean gap, or did the two groups overlap? -->
+It is unrealistic to expect the answers retrieved to be 100% right all the time. However, the RAG should still be right the majority of the time. Considering that the system is a RAG system, when the model is unable to retrieve the correct answer, instead of generating a false answer, it needs to reply "I do not have enough information about that".
 
 ---
 
 ## 4. Something about your chunks
-
-<!-- YOU WRITE THIS ONE.
-
-     How would you know if your chunks were the right size? Name something
-     countable or observable.
-
-     Examples of the right shape — don't copy these, they should come from
-     what you actually saw in Milestone 3:
-       - "At least 4 of 5 sampled chunks read as a complete thought, with no
-          sentence cut in half at either end."
-       - "No chunk is shorter than 200 characters, since anything below that
-          in my corpus turned out to be a heading with no content under it." -->
-
+For all generated chunks, no chunk will be under 31 words and over 98 words.
 
 
 **Why this target:**
+The selected corpora is campus_life. To retain enough content information and heading, 1 chunk should equal to 1 document. All the documents in the campus_life file is between 31 and 98 words.
 
 
 
 ---
 
-## 5. Your choice
+## 5. Speed
 
-<!-- YOU WRITE THIS ONE TOO.
-
-     Pick something you actually care about getting right. It could be about
-     speed, about refusals, about a particular kind of question your corpus
-     handles badly, about source attribution being correct rather than merely
-     present — anything, as long as it names a number or an observable
-     outcome. -->
-
+The response time for the RAG system should be under 5 seconds for at least 4 out of 5 questions.
 
 
 **Why this target:**
+The 5 second limit was selected to ensure that the RAG system remain fast for users. 4 out of 5 questions was set for the delays when calling the model, rather than requiring the response under 5 seconds 100% of the time.
 
 
 
