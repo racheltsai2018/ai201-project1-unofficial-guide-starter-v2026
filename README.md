@@ -29,8 +29,8 @@ The corpus picked for this assignment is campus_life.
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size: 580**
+**Overlap: 100**
 
 <!-- What about YOUR documents made you pick these numbers? Short posts and
      long sectioned guides don't want the same chunking, and "800 seemed
@@ -52,6 +52,52 @@ The corpus picked for this assignment is campus_life.
      across.
 
      Milestone 3. -->
+======================================================================
+Chunk 1  |  source: admin_add_drop_deadline.txt#0  |  produced by: chunker.py::fallback_split
+======================================================================
+On the add/drop deadline
+
+You can add a course through the end of the second week. Dropping is a longer window — through the end of week six — but a drop after week two shows as a W on your transcript. Nothing anywhere on the registrar's site says this plainly, and students find out from each other.
+
+======================================================================
+Chunk 2  |  source: course_biol_160_exams.txt#0  |  produced by: chunker.py::fallback_split
+======================================================================
+BIOL 160 Cell Biology — assessment
+
+Four unit tests and a cumulative final. Not curved.
+
+The unit tests come fast, roughly every three weeks; falling behind once is very hard to recover from.
+
+======================================================================
+Chunk 3  |  source: course_math_220_exams.txt#0  |  produced by: chunker.py::fallback_split
+======================================================================
+MATH 220 Linear Algebra — assessment
+
+Two midterms and a cumulative final. Curved to a b- median.
+
+The problem sets are the course; the lectures make sense afterwards rather than during.
+
+======================================================================
+Chunk 4  |  source: dining_the_ridgeway_cafe.txt#0  |  produced by: chunker.py::fallback_split
+======================================================================
+The Ridgeway Café
+
+Second-year here. Wait times: 10 to 15 minutes at 12:30, none after 2:00. The thing worth going for is the only place on campus with real espresso. The thing to know is that seating is tight; about 40seats for a building of 900.
+
+Hours are 7:00am to 4:00pm weekdays only. Costs declining balance only, no meal swipes.
+
+======================================================================
+Chunk 5  |  source: housing_morrow_house.txt#0  |  produced by: chunker.py::fallback_split
+======================================================================
+Morrow House — what it's actually like
+
+Just finished a year in this building. Built 1954, partially renovated 2008. Rooms are singles and doubles, hall bathrooms.
+
+The good: cheapest housing tier by about $900 a year, and the singles are real singles.
+
+The bad: known damp problem on the ground floor; two rooms were taken offline in 2024.
+
+Laundry costs $1.50 wash, $1.25 dry, coin or card. On noise: loud until about 1am on weekends, no enforced quiet hours.
 
 **Chunk 1** — source: `` — produced by: ``
 
