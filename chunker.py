@@ -22,10 +22,16 @@ to it, write down what you saw, and move on. That's a real observation about
 your pipeline, not giving up.
 """
 
+import re
 from dataclasses import dataclass
 
 import config
 from ingest import Document
+
+# A sentence ends at . ! or ? followed by whitespace. The lookbehind keeps the
+# punctuation attached to the sentence it belongs to. Crude — "Dr. Chen" fools
+# it — and good enough: the cost is an overlap that starts a few words early.
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
 
 
 @dataclass
@@ -97,26 +103,48 @@ def split_documents(documents: list[Document]) -> list[Chunk]:
       - Would splitting on paragraph breaks keep more thoughts intact than
         splitting on a character count?
     """
-    TARGET = 580
+    # A target, not the hard cut fallback_split makes: the packer stops before
+    # crossing it, so whole paragraphs survive.
+    target = config.CHUNK_SIZE
+    overlap = min(config.CHUNK_OVERLAP, target // 2)
+
     chunks: list[Chunk] = []
     for doc in documents:
         blocks = [b.strip() for b in doc.text.split("\n\n") if b.strip()]
         if not blocks:
             continue
         title, body = blocks[0], blocks[1:]
-        if not body:
+        if not body:                        # title-only document
             title, body = "", blocks
+
+        # Leave room for the title, which is prepended to every chunk below.
+        budget = max(target - len(title), target // 2)
+
+        # Paragraphs are the unit. One too long to stand alone falls back to
+        # its sentences, so a corpus of long guides still splits sensibly.
+        units: list[str] = []
+        for paragraph in body:
+            if len(paragraph) <= budget:
+                units.append(paragraph)
+            else:
+                units.extend(s for s in _SENTENCE_END.split(paragraph) if s.strip())
+
         groups: list[str] = []
         current = ""
-        for paragraph in body:
-            candidate = f"{current}\n\n{paragraph}" if current else paragraph
-            if current and len(candidate) > TARGET:
+        for unit in units:
+            candidate = f"{current}\n\n{unit}" if current else unit
+            if current and len(candidate) > budget:
                 groups.append(current)
-                current = paragraph
+                # Carry the last whole sentence over, so a thought split across
+                # a boundary is readable on both sides.
+                tail = _SENTENCE_END.split(current)[-1]
+                carry = tail[-overlap:] if len(tail) > overlap else tail
+                current = f"{carry}\n\n{unit}" if carry else unit
             else:
                 current = candidate
         if current:
             groups.append(current)
+
         for index, group in enumerate(groups):
             text = f"{title}\n\n{group}" if title else group
             chunks.append(

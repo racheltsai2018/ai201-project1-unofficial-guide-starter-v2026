@@ -26,7 +26,7 @@ The corpus picked for this assignment is campus_life.
      this repo.
 
      Milestone 5. -->
-     This is a retrieval-augmented generation system using the 'campus_life' corpus. The system will answer questions regarding a university. Ranging from declaring a major, adding and dropping courses to housing guides, and dining hall reviews.
+     This is a retrieval-augmented generation system using the 'campus_life' corpus. The system will answer questions regarding a university. Topics ranging from declaring a major, adding and dropping courses to housing guides, and dining hall reviews.
 
 ## Chunking Strategy
 
@@ -155,6 +155,7 @@ dining_north_kitchen.txt, housing_fenwick_court.txt, transit_walking.txt
 
 
 For the five test questions the corpus covers the distances range from 0.236 to 0.594. The five in OUT_OF_SCOPE question distances range from 0.825 to 0.934. The gap between questions covered by the corpus and OUT_OF_SCOPE are from 0.594 to 0.825. The cutoff value is calculated by retrieving the distance 0.594 and 0.825 and finding the median. 
+
 | Question | In corpus? | Best distance |
 |---|---|---|
 | How many tests are in BIOL 160? | Yes | 0.236 |
@@ -180,8 +181,10 @@ For the five test questions the corpus covers the distances range from 0.236 to 
      Milestone 5. -->
 
 **1.**
+I asked Claude to help me with the starter's chunking function. It added a target variable instead of using the CHUNK_SIZE and CHUNK_OVERLAP from chunker.py, therefore they are added. I also used Claude to have a better understanding of the chunking function.
 
 **2.**
+I asked Claude to calculate the number of files, the number of words, the number of characters, average number of characters in a sentence in the 'campus_life' corpus. It calculated the numbers for me and returned it. Nothing was changed since the numbers is used to assist in finding the CHUNK_SIZE, and CHUNK_OVERLAP.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
