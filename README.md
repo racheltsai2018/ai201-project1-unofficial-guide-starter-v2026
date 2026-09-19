@@ -26,6 +26,7 @@ The corpus picked for this assignment is campus_life.
      this repo.
 
      Milestone 5. -->
+     This is a retrieval-augmented generation system using the 'campus_life' corpus. The system will answer questions regarding a university. Ranging from declaring a major, adding and dropping courses to housing guides, and dining hall reviews.
 
 ## Chunking Strategy
 
@@ -41,6 +42,7 @@ The corpus picked for this assignment is campus_life.
      more than pretending you got it right first time.
 
      Milestone 3. -->
+The 'campus_life' corpus contains 88 short posts. The longest post in the corpus is 563 characters. As a result, 580 is selected to ensure the 1 document = 1 chunk, so enough information will be included in a chunk to generate answers for the questions. To ensure that a sentence does not get cut in half, the overlap is set as 100. The reason for that is the average amount of characters in one sentence is about 100 characters.
 
 ## Sample Chunks
 
@@ -52,13 +54,20 @@ The corpus picked for this assignment is campus_life.
      across.
 
      Milestone 3. -->
+**Chunk 1** — source: admin_add_drop_deadline.txt — produced by: chunker.py::split_documents
+
+```
 ======================================================================
 Chunk 1  |  source: admin_add_drop_deadline.txt#0  |  produced by: chunker.py::split_documents
 ======================================================================
 On the add/drop deadline
 
 You can add a course through the end of the second week. Dropping is a longer window — through the end of week six — but a drop after week two shows as a W on your transcript. Nothing anywhere on the registrar's site says this plainly, and students find out from each other.
+```
 
+**Chunk 2** — source: course_biol_160.txt — produced by: chunker.py::split_documents
+
+```
 ======================================================================
 Chunk 2  |  source: course_biol_160.txt#0  |  produced by: chunker.py::split_documents
 ======================================================================
@@ -69,7 +78,11 @@ I lived here my sophomore year. Format is lecture three times a week with a week
 Expect 9 to 11 hours a week, the heaviest first-year course by reputation.
 
 The one piece of advice: the unit tests come fast, roughly every three weeks; falling behind once is very hard to recover from.
+```
 
+**Chunk 3** — source: course_hist_118_workload.txt — produced by: chunker.py::split_documents
+
+```
 ======================================================================
 Chunk 3  |  source: course_hist_118_workload.txt#0  |  produced by: chunker.py::split_documents
 ======================================================================
@@ -78,7 +91,11 @@ Workload for HIST 118 Modern World History
 People keep asking so: a lot of reading, about 120 pages a week, but no problem sets. That's real time, not optimistic time.
 
 It's front-loaded — the first month is heavier than the rest, partly because you're learning the format.
+```
 
+**Chunk 4** — source: dining_pellew_dining_hall_followup.txt — produced by: chunker.py::split_documents
+
+```
 ======================================================================
 Chunk 4  |  source: dining_pellew_dining_hall_followup.txt#0  |  produced by: chunker.py::split_documents
 ======================================================================
@@ -87,7 +104,11 @@ Re: Pellew Dining Hall
 Adding to what people have said about Pellew Dining Hall. The wait figure of 12 to 18 minutes at peak matches what I've seen. If you're trying to eat between classes, go before 11:45 and it's a different building entirely.
 
 Also worth saying: the furthest hall from anywhere, next to the athletics centre. Nobody tells you this at orientation.
+```
 
+**Chunk 5** — source: housing_innisfree_hall.txt — produced by: chunker.py::split_documents
+
+```
 ======================================================================
 Chunk 5  |  source: housing_innisfree_hall.txt#0  |  produced by: chunker.py::split_documents
 ======================================================================
@@ -100,30 +121,6 @@ The good: the shared-bathroom-between-two-rooms arrangement is the best compromi
 The bad: no air conditioning, which matters for the first three weeks of September.
 
 Laundry costs $1.75 wash, $1.75 dry, app-based. On noise: moderate; the building is L-shaped and the short wing is much quieter.
-
-**Chunk 1** — source: `` — produced by: ``
-
-```
-```
-
-**Chunk 2** — source: `` — produced by: ``
-
-```
-```
-
-**Chunk 3** — source: `` — produced by: ``
-
-```
-```
-
-**Chunk 4** — source: `` — produced by: ``
-
-```
-```
-
-**Chunk 5** — source: `` — produced by: ``
-
-```
 ```
 
 ## Sample Answer
@@ -131,14 +128,21 @@ Laundry costs $1.75 wash, $1.75 dry, app-based. On noise: moderate; the building
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+**Question:** According to the junior, what is worth going for in Kestrel Commons?
 
 **Answer:**
 
 ```
+  (best distance 0.594, cutoff 0.7)
+
+According to the junior, the stir-fry station (which is made to order) is
+worth going for in Kestrel Commons (dining_kestrel_commons.txt).
+
+Sources retrieved: dining_kestrel_commons.txt, dining_kestrel_commons_followup.txt,
+dining_north_kitchen.txt, housing_fenwick_court.txt, transit_walking.txt
 ```
 
-**My relevance cutoff:**
+**My relevance cutoff: 0.7**
 
 <!-- The number you set in config.py, and how you got there.
 
@@ -149,9 +153,20 @@ Laundry costs $1.75 wash, $1.75 dry, app-based. On noise: moderate; the building
 
      Milestone 4. -->
 
+
+For the five test questions the corpus covers the distances range from 0.236 to 0.594. The five in OUT_OF_SCOPE question distances range from 0.825 to 0.934. The gap between questions covered by the corpus and OUT_OF_SCOPE are from 0.594 to 0.825. The cutoff value is calculated by retrieving the distance 0.594 and 0.825 and finding the median. 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| How many tests are in BIOL 160? | Yes | 0.236 |
+| Which class curves midterm but not final? | Yes | 0.497 |
+| How much does laundry costs in Aldridge Hall? | Yes | 0.257 |
+| What are the library hours? | Yes | 0.393 |
+| According to the junior, what is worth going for in Kestrel Commons? | Yes | 0.594 |
+| What is the capital of Mongolia? | No | 0.825 |
+| How do I change the oil in a diesel engine? | No | 0.934 |
+| Who won the 1994 World Cup? | No | 0.886 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.844 |
+| How do I write a for loop in Rust? | No | 0.896 |
 
 ## How I Used AI
 
