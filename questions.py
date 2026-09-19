@@ -27,7 +27,7 @@ QUESTIONS = [
     {"question": "What are the library hours?", "expects": "The library is open until 2am during term, and until 10pm during reading week."},
     {"question": "According to students, What is worth going for in Kestrel Commons?", "expects": "Stir-fry station is worth going for, since it is made to order."},
     {"question": "How many tests are in BIOL 160?", "expects": "Four unit tests and a cumulative final."},
-    {"question": "How many classes curve?", "expects": "3 classes. The answer will be 4 classes if CS210 is included where midterms are curved and final is not."},
+    {"question": "Which class curves midterm but not final?", "expects": "Class CS 210"},
 ]
 
 # Questions from a different world entirely. Your gate should refuse all five.
