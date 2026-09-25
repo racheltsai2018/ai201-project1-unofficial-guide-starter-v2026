@@ -53,11 +53,11 @@ It is unrealistic to expect the answers retrieved to be 100% right all the time.
 ---
 
 ## 4. Something about your chunks
-For all generated chunks, no chunk will be under 31 words and over 98 words.
+For all generated chunks, no chunk will be under 179 characters and over 550 characters.
 
 
 **Why this target:**
-The selected corpora is campus_life. To retain enough content information and heading, 1 chunk should equal to 1 document. All the documents in the campus_life file is between 31 and 98 words.
+The selected corpora is campus_life. To retain enough content information and heading, 1 chunk should equal to 1 document. All the documents in the campus_life file is between 179 and 550 characters.
 
 
 

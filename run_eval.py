@@ -35,6 +35,7 @@ you a scorer; you'd learn nothing from it.
 import argparse
 import datetime as dt
 import sys
+import time
 from pathlib import Path
 
 import config
@@ -57,15 +58,16 @@ def run_once(question: str, top_k, threshold, corpus, variant):
     import gate
     from generate import answer_from_chunks
 
+    started = time.perf_counter()
     results = search(question, top_k=top_k, corpus=corpus, variant=variant)
     decision = gate.check(results, threshold=threshold)
 
     if not decision.passed:
-        return gate.REFUSAL, results, decision
+        return gate.REFUSAL, results, decision, time.perf_counter() - started
 
     # cache=False on purpose. Three runs have to be three real answers.
     answer = answer_from_chunks(question, results, cache=False)
-    return answer, results, decision
+    return answer, results, decision, time.perf_counter() - started
 
 
 def main():
@@ -105,18 +107,20 @@ def main():
     for item in items:
         question = item["question"]
         expects = item.get("expects", "")
-        print(f"\n{question}")
+        if judge is None:
+            print(f"\n{question}")
 
         run_results = []
         for run in range(1, args.runs + 1):
-            answer, results, decision = run_once(
+            answer, results, decision, elapsed = run_once(
                 question, top_k, threshold, corpus, args.variant
             )
+            chunk_chars = [len(r.text) for r in results]
             passed = judge(question, expects, answer, results) if judge else None
             run_results.append(passed)
 
-            mark = {True: "pass", False: "fail", None: "—"}[passed]
-            print(f"  run {run}: {mark}  (best distance {decision.best_distance:.3f})")
+            if judge is None:  # scorer.py prints its own verdict lines
+                print(f"  run {run}: —  (best distance {decision.best_distance:.3f})")
 
             transcript.append(
                 {
@@ -126,10 +130,22 @@ def main():
                     "sources": sorted({r.source for r in results}),
                     "best_distance": decision.best_distance,
                     "gate_passed": decision.passed,
+                    "chunk_chars": chunk_chars,
+                    "context_chars": sum(chunk_chars),
+                    "seconds": elapsed,
                 }
             )
 
-        rows.append({"question": question, "expects": expects, "runs": run_results})
+        run_entries = transcript[-args.runs:]
+        rows.append(
+            {
+                "question": question,
+                "expects": expects,
+                "runs": run_results,
+                "context_chars": sum(e["context_chars"] for e in run_entries) // len(run_entries),
+                "seconds": sum(e["seconds"] for e in run_entries) / len(run_entries),
+            }
+        )
 
     gate_rows = check_out_of_scope(top_k, threshold, corpus, args.variant)
 
@@ -200,8 +216,8 @@ def write_report(rows, transcript, gate_rows, args, corpus, top_k, threshold, sc
         "one row per CRITERION, so aggregate these into it — criterion 1 is how many",
         "of your questions had the answer in the retrieved chunks, and so on.",
         "",
-        f"| Question | {run_headers} |",
-        f"|---|{run_divider}|",
+        f"| Question | {run_headers} | Chunk chars (avg) | Seconds (avg) |",
+        f"|---|{run_divider}|---|---|",
     ]
 
     for row in rows:
@@ -209,7 +225,10 @@ def write_report(rows, transcript, gate_rows, args, corpus, top_k, threshold, sc
         for passed in row["runs"]:
             cells.append({True: "pass", False: "fail", None: " "}[passed])
         question = row["question"].replace("|", "\\|")
-        lines.append(f"| {question} | {' | '.join(cells)} |")
+        lines.append(
+            f"| {question} | {' | '.join(cells)} | "
+            f"{row['context_chars']} | {row['seconds']:.2f} |"
+        )
 
     if not scored:
         lines += [
@@ -254,6 +273,10 @@ def write_report(rows, transcript, gate_rows, args, corpus, top_k, threshold, sc
             f"- Best distance: {entry['best_distance']:.4f} "
             f"({'passed' if entry['gate_passed'] else 'refused by'} the gate)",
             f"- Sources retrieved: {', '.join(entry['sources']) or 'none'}",
+            f"- Chunk characters: {entry['context_chars']} total across "
+            f"{len(entry['chunk_chars'])} chunks "
+            f"({', '.join(str(n) for n in entry['chunk_chars']) or 'none'})",
+            f"- Time to answer: {entry['seconds']:.2f}s",
             "",
             "```",
             entry["answer"],

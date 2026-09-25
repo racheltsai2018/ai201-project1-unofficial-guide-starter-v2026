@@ -249,24 +249,34 @@ def generate(prompt: str, system: str | None = None, cache: bool = True) -> str:
         except Exception as exc:  # noqa: BLE001 — surfaced below
             last_error = exc
             message = str(exc).lower()
-            rate_limited = (
-                "429" in message
-                or "resource" in message and "exhaust" in message
-                or "rate" in message and "limit" in message
+            # 429 is us asking too fast. 500/502/503/504 are the service
+            # failing on its own. Both are temporary and both are worth
+            # retrying; anything else is a real bug and should surface.
+            status = getattr(exc, "code", None) or getattr(exc, "status_code", None)
+            transient = status in (429, 500, 502, 503, 504) or (
+                status is None
+                and (
+                    "429" in message
+                    or "resource" in message and "exhaust" in message
+                    or "rate" in message and "limit" in message
+                    or "internal" in message
+                    or "unavailable" in message
+                    or "overload" in message
+                )
             )
-            if not rate_limited:
+            if not transient:
                 raise
             backoff = 2 ** attempt
             print(
-                f"  [rate limit] service pushed back. Retrying in {backoff}s "
-                f"(attempt {attempt + 1} of {config.MAX_RETRIES}).",
+                f"  [retry] service returned {status or 'an error'}. Retrying in "
+                f"{backoff}s (attempt {attempt + 1} of {config.MAX_RETRIES}).",
                 file=sys.stderr,
                 flush=True,
             )
             time.sleep(backoff)
 
     raise RuntimeError(
-        f"Still rate limited after {config.MAX_RETRIES} attempts. Wait a "
+        f"The service kept failing after {config.MAX_RETRIES} attempts. Wait a "
         f"minute and try again — your key is fine.\nLast error: {last_error}"
     )
 
