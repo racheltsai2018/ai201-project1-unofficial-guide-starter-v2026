@@ -265,23 +265,7 @@ Sources: `course_biol_160_exams.txt`, `course_biol_160.txt`
 
 ## Diagnoses
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
-
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
-
-     The five stages: loading → chunking → embedding → retrieval → generation.
-
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
-
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
-
-     Milestone 3. -->
+All 5 criteria are MET for all 3 test runs. This indicates that some targets were low. Criterion 5 is the criteria I would tighten. Criterion 5 indicates that the response time for the RAG system should be under 5 seconds for at least 4 out of 5 questions. For the 3 runs, there was only the first question on the first run that took 7 seconds, aside from that all other questions took less than 1 second. The criterion could be shortened to each question should take less than 0.75 seconds for 4 out of 5 questions. By tightening the criterion it would measure the response performance more effectively to improve user experience.
 
 ## The Improvement
 
