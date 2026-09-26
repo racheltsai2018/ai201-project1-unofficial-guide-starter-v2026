@@ -173,7 +173,7 @@ I asked Claude to calculate the number of files, the number of words, the number
 | 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
 | 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
 | 4. For all generated chunks, no chunk will be under 179 characters and over 550 characters. | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 5. The response time for the RAG system should under 5 seconds for at least 4 out of 5 questions. | 4 of 5 | 4/5 | 5/5 | 5/5 | MET |
+| 5. The response time for the RAG system should be under 5 seconds for at least 4 out of 5 questions. | 4 of 5 | 4/5 | 5/5 | 5/5 | MET |
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
@@ -257,11 +257,11 @@ Sources: `course_biol_160_exams.txt`, `course_biol_160.txt`
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunk contains the answer. | MET | All 5 of the questions successfully returned chunks containg the answer for all 3 runs. This exceeds the target of 4/5. |
+| 2 | Every answer names a source. | MET | I decided this criterion passed because all 5 responses cited the source, meaning that it is scored 5/5 for all 3 runs. |
+| 3 | Gate stops out-of-corpus questions. | MET | All 5 out-of-scope questions were rejected by the gate for all 3 runs. As a result, this criteria passed.  |
+| 4 | For all generated chunks, no chunk will be under 179 characters and over 550 characters. | MET | All chunks generated for to answer the question follow the constraint of over 179 characters and under 550 characters. |
+| 5 | The response time for the RAG system should be under 5 seconds for at least 4 out of 5 questions.| MET | The criterion met target because the system met the threshold 4/5 times in the first round, and 5/5 for second and third round. Meeting the 4/5 target for all 3 runs. |
 
 ## Diagnoses
 
