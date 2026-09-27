@@ -265,38 +265,29 @@ Sources: `course_biol_160_exams.txt`, `course_biol_160.txt`
 
 ## Diagnoses
 
-All 5 criteria are MET for all 3 test runs. This indicates that some targets were low. Criterion 5 is the criteria I would tighten. Criterion 5 indicates that the response time for the RAG system should be under 5 seconds for at least 4 out of 5 questions. For the 3 runs, there was only the first question on the first run that took 7 seconds, aside from that all other questions took less than 1 second. The criterion could be shortened to each question should take less than 0.75 seconds for 4 out of 5 questions. By tightening the criterion it would measure the response performance more effectively to improve user experience.
+All 5 criteria are MET for all 3 test runs. This indicates that some targets were low. Criterion 5 is the criteria I would tighten. Criterion 5 indicates that the response time for the RAG system should be under 5 seconds for at least 4 out of 5 questions. For the 3 runs, there was only the first question on the first run that took 7 seconds, aside from that all other questions took less than 1 second. The criterion could be shortened to each question should take less than 0.8 seconds for 4 out of 5 questions. By tightening the criterion it would measure the response performance more effectively to improve user experience.
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** 
+
+I modified the chunking strategy by changing the chunk size from 580 characters to 240 characters and adjusting the chunk overlap from 100 characters to 40 characters.
 
 **Why I picked it:**
 
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
-
+The diagnoses above show that the first question's response time takes about 7 seconds, and now after the change the response time for the first question takes about 3.7 seonds. 
 ### Run Log — After
-
-<!-- Same format, same five criteria, three runs each.
-     `python run_eval.py --label after` -->
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. For all generated chunks, no chunk will be under 179 characters and over 550 characters.| 5 out of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. The response time for the RAG system should be under 5 seconds for at least 4 out of 5 questions.| 4 out of 5 | 5/5 | 5/5 | 5/5 | MET |
 
 **Did it help?**
-
-<!-- Say plainly whether it did, and how you know. If it made things worse,
-     say that — a change that backfired, honestly reported, earns full credit
-     and is more interesting than one that worked. What matters is that you can
-     tell.
-
-     Milestone 4. -->
+The change helped speed up response times for the initial question. Reducing the chunk size reduce the amount of text send to the model, speeds up the response time for the first question, shortening from 7.26 seconds to 3.77 seconds. The response time for the remaining question remain about the same from 0.5 seconds to 0.9 seconds.
 
 ## What's Still Broken
 
